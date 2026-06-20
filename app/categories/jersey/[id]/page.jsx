@@ -3,50 +3,64 @@ import { ObjectId } from "mongodb";
 import Image from "next/image";
 
 export default async function JerseyDetails({ params }) {
-  const client = await clientPromise;
+  const { id } = await params;
 
+  const client = await clientPromise;
   const db = client.db("orginalDB");
 
-  const jersey = await db
-    .collection("jerseys")
-    .findOne({
-      _id: new ObjectId(params.id),
-    });
+  const jersey = await db.collection("jerseys").findOne({
+    _id: new ObjectId(id),
+  });
+
+  if (!jersey) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <h1 className="text-3xl font-bold">Jersey Not Found</h1>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
-      <div className="grid lg:grid-cols-2 gap-10">
-        <div className="relative h-[500px]">
+    <section className="max-w-7xl mx-auto px-4 py-12">
+      <div className="grid lg:grid-cols-2 gap-12">
+        <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-lg">
           <Image
             src={jersey.image}
             alt={jersey.name}
             fill
-            className="object-cover rounded-2xl"
+            sizes="(max-width:768px) 100vw, 50vw"
+            className="object-cover"
           />
         </div>
 
         <div>
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-bold mb-4">
             {jersey.name}
           </h1>
 
-          <p className="text-gray-500 mt-3">
-            {jersey.brand}
+          <p className="text-lg text-gray-500 mb-4">
+            Brand: {jersey.brand}
           </p>
 
-          <h2 className="text-3xl font-bold text-blue-600 mt-5">
+          <p className="text-3xl font-bold text-blue-600 mb-6">
             ৳ {jersey.price}
-          </h2>
+          </p>
 
-          <p className="mt-6 text-gray-600">
+          <p className="text-gray-700 leading-8">
             {jersey.description}
           </p>
 
-          <button className="mt-8 bg-blue-600 text-white px-8 py-3 rounded-xl">
-            Add To Cart
-          </button>
+          <div className="flex gap-4 mt-8">
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700">
+              Add To Cart
+            </button>
+
+            <button className="border border-blue-600 text-blue-600 px-8 py-3 rounded-xl hover:bg-blue-50">
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

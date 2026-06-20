@@ -49,10 +49,10 @@ export default function JerseyPage() {
                   ৳{jersey.price}
                 </span>
 
-                <Link
-                  href={`/jersey/${jersey._id}`}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-                >
+<Link
+                   href={`/categories/jersey/${jersey._id}`}
+                   className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                 >
                   Details
                 </Link>
               </div>
